@@ -1,5 +1,6 @@
 import os
 import random
+import csv
 
 def get_names(file_name):
 
@@ -23,9 +24,19 @@ def generate_student_scores(names, num=10):
         scores_list.append(info)                        
     return scores_list
 
+def save_file_csv(student_scroes, file_name='students.csv'):
+    key = student_scroes[0].keys()
+    relative_path = 'assets/' + file_name
+    absolute_path = os.path.abspath(relative_path)
+
+    with open(absolute_path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=key)
+        writer.writeheader()
+        writer.writerows(student_scroes)
 
 names = get_names("names.txt")
 num = int(input("請輸入要產生幾位學生的成績資料: "))
 students = generate_student_scores(names, num=num)
+save_file_csv(students, file_name='students.csv')
 
-print(students)
+print(f"已產生 {num} 位學生的成績資料，並存成 students.csv 檔案")
