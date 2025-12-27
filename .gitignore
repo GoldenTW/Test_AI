@@ -1,3 +1,10 @@
+# Golden 1227 fixed
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+
 # user definse ignore
 .devcontainer
 .github
