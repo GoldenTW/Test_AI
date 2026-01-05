@@ -65,6 +65,23 @@ def get_datafolder_files() -> list[str]:
     return files_in_data_directory
 
 
+def all_years_merge() -> DataFrame:
+    all_files = get_datafolder_files()
+    if not all_files:
+        print("data 資料夾找不到 '每日各站進出站人數' 的 csv 檔案")
+        return
+
+    all_years_data: list[pd.DataFrame] = []
+    for year_file in all_files:
+        merged_table = merge_two_table(year_file)
+        all_years_data.append(merged_table)
+
+    # 你如果想要「一張總表」通常會 concat
+    all_df = pd.concat(all_years_data, ignore_index=True)
+
+    return all_df
+
+
 def main():
     all_files = get_datafolder_files()
     if not all_files:
