@@ -4,3 +4,4 @@ gunicorn
 google-genai
 python-dotenv
 google-generativeai
+line-bot-sdk

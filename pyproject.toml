@@ -20,4 +20,5 @@ dependencies = [
     "yfinance>=1.0",
     "google-genai",
     "google-generativeai>=0.8.6",
+    "line-bot-sdk>=3.22.0",
 ]
