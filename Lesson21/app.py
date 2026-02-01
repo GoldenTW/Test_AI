@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, render_template,abort, render_template_string
+from flask import Flask, request, jsonify, render_template,abort
 from dotenv import load_dotenv
 from google import genai
 from linebot import LineBotApi, WebhookHandler
