@@ -15,8 +15,20 @@ if not API_KEY:
     raise RuntimeError("找不到 GEMINI_API_KEY2，請在 .env 設定：GEMINI_API_KEY2=你的Key")
 
 client = genai.Client(api_key=API_KEY)
-line_bot_api = LineBotApi(os.environ['CHANNEL_ACCESS_TOKEN'])
-handler = WebhookHandler(os.environ['CHANNEL_SECRET'])
+
+# Line Bot 相關設定（若未設定則設為 None，避免啟動失敗）
+CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
+CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
+
+if CHANNEL_ACCESS_TOKEN:
+    line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+else:
+    line_bot_api = None
+    
+if CHANNEL_SECRET:
+    handler = WebhookHandler(CHANNEL_SECRET)
+else:
+    handler = None
 
 
 # 你可換成你帳號可用的模型
@@ -46,6 +58,9 @@ def chat():
 
 @app.route("/callback", methods=['POST'])
 def callback():
+    if not handler:
+        return 'Line Bot handler not configured', 400
+        
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
@@ -58,9 +73,7 @@ def callback():
     return 'OK'
 
 
-@handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=event.message.text
@@ -68,6 +81,10 @@ def handle_message(event):
 
     message = TextSendMessage(text=response.text)
     line_bot_api.reply_message(event.reply_token, message)
+
+
+if handler:
+    handler.add(MessageEvent, message=TextMessage)(handle_message)
 
 
 if __name__ == "__main__":

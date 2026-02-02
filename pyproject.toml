@@ -21,4 +21,5 @@ dependencies = [
     "google-genai",
     "google-generativeai>=0.8.6",
     "line-bot-sdk>=3.22.0",
+    "flash>=1.0.3",
 ]
